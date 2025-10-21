@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Práctica - Sistema de Traslación Vehicular</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #003876 0%, #005eb8 50%, #0077be 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003876 0%, #005eb8 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-bottom: 5px solid #fdb913;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 3px solid #ddd;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+
+        .nav-tab:hover {
+            background: #e0e0e0;
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #003876;
+            border-bottom: 3px solid #fdb913;
+        }
+
+        .content {
+            padding: 40px;
+            min-height: 600px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sección de Estudio */
+        .study-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .study-card h2 {
+            color: #003876;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+
+        .study-card h2::before {
+            content: "📚";
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .study-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+
+        .study-content h3 {
+            color: #fdb913;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .study-content ul {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        .study-content li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fff9e6;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #003876;
+            border-bottom: 2px solid #fdb913;
+        }
+
+        /* Juego de Memoria */
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #003876 0%, #005eb8 100%);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: cardEntry 0.5s ease-out backwards;
+            border: 2px solid #fdb913;
+        }
+
+        @keyframes cardEntry {
+            from {
+                opacity: 0;
+                transform: scale(0.3) rotateY(180deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotateY(0deg);
+            }
+        }
+
+        .memory-card:nth-child(1) { animation-delay: 0.05s; }
+        .memory-card:nth-child(2) { animation-delay: 0.1s; }
+        .memory-card:nth-child(3) { animation-delay: 0.15s; }
+        .memory-card:nth-child(4) { animation-delay: 0.2s; }
+        .memory-card:nth-child(5) { animation-delay: 0.25s; }
+        .memory-card:nth-child(6) { animation-delay: 0.3s; }
+        .memory-card:nth-child(7) { animation-delay: 0.35s; }
+        .memory-card:nth-child(8) { animation-delay: 0.4s; }
+        .memory-card:nth-child(9) { animation-delay: 0.45s; }
+        .memory-card:nth-child(10) { animation-delay: 0.5s; }
+        .memory-card:nth-child(11) { animation-delay: 0.55s; }
+        .memory-card:nth-child(12) { animation-delay: 0.6s; }
+        .memory-card:nth-child(13) { animation-delay: 0.65s; }
+        .memory-card:nth-child(14) { animation-delay: 0.7s; }
+        .memory-card:nth-child(15) { animation-delay: 0.75s; }
+        .memory-card:nth-child(16) { animation-delay: 0.8s; }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #003876 0%, #005eb8 100%);
+            color: #fdb913;
+            font-size: 2em;
+        }
+
+        .card-back {
+            background: white;
+            color: #003876;
+            transform: rotateY(180deg);
+            font-size: 0.9em;
+            border: 3px solid #fdb913;
+        }
+
+        .game-stats {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            color: #003876;
+            font-weight: bold;
+        }
+
+        .reset-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #003876 0%, #005eb8 100%);
+            color: white;
+            border: 2px solid #fdb913;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .reset-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Simulación Práctica */
+        .simulation-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .vehicle-display {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            min-height: 400px;
+            position: relative;
+        }
+
+        .vehicle-svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .component-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .component-btn {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #003876;
+            border-radius: 10px;
+            color: #003876;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .component-btn:hover {
+            background: #003876;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(253, 185, 19, 0.3);
+            border-color: #fdb913;
+        }
+
+        .component-btn.active {
+            background: #fdb913;
+            color: #003876;
+            border-color: #fdb913;
+        }
+
+        .component-info {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.5s;
+        }
+
+        .component-info.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Evaluación */
+        .quiz-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            color: #003876;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #fdb913;
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.05em;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct-feedback {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+
+        .feedback.incorrect-feedback {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+
+        .feedback strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .submit-quiz {
+            display: block;
+            margin: 30px auto;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .submit-quiz:hover {
+            transform: scale(1.05);
+        }
+
+        .quiz-results {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .quiz-results.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .score {
+            font-size: 3em;
+            color: #28a745;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .memory-game {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .nav-tab {
+                font-size: 0.9em;
+                padding: 15px 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .memory-game {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Mapa Conceptual */
+        .concept-map-container {
+            background: linear-gradient(135deg, #003876 0%, #005eb8 100%);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #fdb913;
+        }
+
+        .concept-map-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+            pointer-events: none;
+        }
+
+        .concept-map-title {
+            text-align: center;
+            color: white;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .concept-map {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .concept-node {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 3px solid transparent;
+        }
+
+        .concept-node:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+            border-color: #ffd700;
+        }
+
+        .concept-node.active {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+
+        .concept-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .concept-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+
+        .concept-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #003876;
+        }
+
+        .concept-subtitle {
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .concept-details {
+            display: none;
+            animation: expandDown 0.3s ease;
+        }
+
+        .concept-node.active .concept-details {
+            display: block;
+        }
+
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        .concept-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .concept-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .concept-list li:last-child {
+            border-bottom: none;
+        }
+
+        .concept-list li::before {
+            content: "▸";
+            color: #fdb913;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .key-concept {
+            background: #fff9e6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #fdb913;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #003876;
+        }
+
+        .expand-hint {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            font-size: 1.1em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .concept-map {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .concept-map {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                <div style="background: white; padding: 15px 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                    <h1 style="color: #003876; margin: 0; font-size: 2em;">🚗 Sistema de Traslación Vehicular</h1>
+                    <p style="color: #666; margin: 5px 0 0 0; font-size: 0.9em;">Universidad Politécnica Salesiana</p>
+                </div>
+            </div>
+            <p style="margin-top: 20px; font-size: 1.1em;">Chasis, Suspensión y Frenos - Guía Práctica Interactiva</p>
+            <div style="margin-top: 15px; padding: 10px; background: rgba(253, 185, 19, 0.2); border-radius: 10px; display: inline-block;">
+                <p style="margin: 0; font-size: 0.95em;">⚙️ Ingeniería Automotriz</p>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('study')">📚 Estudiar</button>
+            <button class="nav-tab" onclick="showSection('memory')">🧠 Memoria</button>
+            <button class="nav-tab" onclick="showSection('simulation')">🔧 Práctica</button>
+            <button class="nav-tab" onclick="showSection('quiz')">✅ Evaluación</button>
+        </div>
+
+        <div class="content">
+            <!-- SECCIÓN DE ESTUDIO -->
+            <div id="study" class="section active">
+                <!-- MAPA CONCEPTUAL INTERACTIVO -->
+                <div class="concept-map-container">
+                    <h2 class="concept-map-title">🗺️ Mapa Conceptual Interactivo</h2>
+                    <p style="text-align: center; color: white; font-size: 1.1em; margin-bottom: 30px;">
+                        Haz clic en cada sistema para explorar sus conceptos clave
+                    </p>
+                    
+                    <div class="concept-map">
+                        <!-- Nodo 1: Sistema de Frenos -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">🛑</div>
+                                <div>
+                                    <div class="concept-title">Sistema de Frenos</div>
+                                    <div class="concept-subtitle">Seguridad Activa</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>Importancia:</strong></p>
+                                <ul class="concept-list">
+                                    <li>Elemento más crítico de seguridad activa del vehículo</li>
+                                    <li>Permite deceleración y detención controlada</li>
+                                    <li>Esencial para la seguridad del conductor y pasajeros</li>
+                                </ul>
+                                
+                                <p><strong>Función Principal:</strong></p>
+                                <div class="key-concept">
+                                    ⚡ Convertir energía cinética en energía térmica mediante rozamiento entre elementos de fricción
+                                </div>
+                                
+                                <p><strong>Características Clave:</strong></p>
+                                <ul class="concept-list">
+                                    <li><strong>Frenos de disco:</strong> Mayor eficacia, mejor disipación térmica, previenen fading</li>
+                                    <li><strong>Frenos de tambor:</strong> Más económicos, menor disipación de calor</li>
+                                    <li><strong>Sistema hidráulico:</strong> Transmisión de fuerza mediante fluido</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Nodo 2: Sistema de Suspensión -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">⚙️</div>
+                                <div>
+                                    <div class="concept-title">Sistema de Suspensión</div>
+                                    <div class="concept-subtitle">Confort y Adherencia</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>Importancia:</strong></p>
+                                <ul class="concept-list">
+                                    <li>Atenúa transmisión de irregularidades del terreno</li>
+                                    <li>Optimiza contacto neumático-pavimento</li>
+                                    <li>Garantiza estabilidad direccional</li>
+                                </ul>
+                                
+                                <p><strong>Función Principal:</strong></p>
+                                <div class="key-concept">
+                                    🎯 Mantener contacto neumático-pavimento optimizando adherencia y confort de marcha
+                                </div>
+                                
+                                <p><strong>Características - McPherson:</strong></p>
+                                <ul class="concept-list">
+                                    <li>Pseudobrazo oscilante con triángulo articulado</li>
+                                    <li>Brazo inferior + conjunto muelle-amortiguador coaxial</li>
+                                    <li>Prevalente en ejes delanteros de vehículos ligeros</li>
+                                    <li>Compacta y eficiente</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Nodo 3: Sistema de Dirección -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">🎯</div>
+                                <div>
+                                    <div class="concept-title">Sistema de Dirección</div>
+                                    <div class="concept-subtitle">Control de Trayectoria</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>Importancia:</strong></p>
+                                <ul class="concept-list">
+                                    <li>Control de trayectoria del vehículo</li>
+                                    <li>Maniobrabilidad y seguridad activa</li>
+                                    <li>Modificación del ángulo de ruedas directrices</li>
+                                </ul>
+                                
+                                <p><strong>Función Principal:</strong></p>
+                                <div class="key-concept">
+                                    🔄 Transformar movimiento angular del volante en desplazamiento angular de ruedas directrices
+                                </div>
+                                
+                                <p><strong>Características - Cremallera:</strong></p>
+                                <ul class="concept-list">
+                                    <li>Sistema simple y directo (conversión rotatorio-lineal)</li>
+                                    <li>Bajo número de componentes</li>
+                                    <li>Transmisión directa sin intermediarios</li>
+                                    <li>Estándar en vehículos ligeros modernos</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Nodo 4: Amortiguador -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">🔧</div>
+                                <div>
+                                    <div class="concept-title">Amortiguador</div>
+                                    <div class="concept-subtitle">Control de Oscilaciones</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>Función Específica:</strong></p>
+                                <div class="key-concept">
+                                    💧 Elemento disipativo que controla oscilaciones del sistema masa-resorte mediante resistencia hidrodinámica
+                                </div>
+                                
+                                <p><strong>Características:</strong></p>
+                                <ul class="concept-list">
+                                    <li>Disipa energía de oscilación del sistema elástico</li>
+                                    <li>Evita resonancia del vehículo</li>
+                                    <li>Mejora confort y adherencia</li>
+                                    <li>Sin él, el vehículo oscilaría indefinidamente</li>
+                                </ul>
+                                
+                                <p><strong>Principio de Operación:</strong></p>
+                                <ul class="concept-list">
+                                    <li>Resistencia viscosa del fluido hidráulico</li>
+                                    <li>Válvulas calibradas controlan flujo</li>
+                                    <li>Genera fuerza proporcional a la velocidad</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Nodo 5: Tipos de Frenos -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">🔴</div>
+                                <div>
+                                    <div class="concept-title">Frenos: Disco vs Tambor</div>
+                                    <div class="concept-subtitle">Comparativa Técnica</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>Frenos de Disco - Ventajas:</strong></p>
+                                <ul class="concept-list">
+                                    <li>✅ Mayor eficacia de frenado</li>
+                                    <li>✅ Superior disipación térmica (expuestos al aire)</li>
+                                    <li>✅ Reducen riesgo de fading (pérdida por sobrecalentamiento)</li>
+                                    <li>✅ Eje delantero y vehículos de alta gama</li>
+                                </ul>
+                                
+                                <p><strong>Frenos de Tambor - Características:</strong></p>
+                                <ul class="concept-list">
+                                    <li>💰 Sistema más económico</li>
+                                    <li>⚠️ Menor disipación de calor (encapsulados)</li>
+                                    <li>📍 Eje trasero vehículos gama media-baja</li>
+                                    <li>🔄 Mayor superficie de fricción</li>
+                                </ul>
+                                
+                                <div class="key-concept">
+                                    🎯 Los frenos de disco son más eficaces por su mejor refrigeración
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nodo 6: Tipos de Dirección -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">🔵</div>
+                                <div>
+                                    <div class="concept-title">Tipos de Dirección</div>
+                                    <div class="concept-subtitle">Mecanismos de Transmisión</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>1. Cremallera y Piñón:</strong></p>
+                                <ul class="concept-list">
+                                    <li>🚗 Vehículos ligeros (más común)</li>
+                                    <li>Transmisión directa</li>
+                                    <li>Sistema simple y eficiente</li>
+                                    <li>Bajo número de componentes</li>
+                                </ul>
+                                
+                                <p><strong>2. Bolas Recirculantes:</strong></p>
+                                <ul class="concept-list">
+                                    <li>🚛 Vehículos pesados (buses, camiones)</li>
+                                    <li>Alta capacidad de carga</li>
+                                    <li>Suavidad por recirculación de esferas</li>
+                                    <li>Mayor eficiencia mecánica</li>
+                                </ul>
+                                
+                                <p><strong>3. Rodillo Globoidal:</strong></p>
+                                <ul class="concept-list">
+                                    <li>Bajo desgaste</li>
+                                    <li>Permite reajuste de holgura</li>
+                                    <li>Sistema suave</li>
+                                    <li>Menor fricción</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Nodo 7: Componentes de Suspensión -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">🟡</div>
+                                <div>
+                                    <div class="concept-title">Componentes Suspensión</div>
+                                    <div class="concept-subtitle">Elementos Esenciales</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>Elementos Principales:</strong></p>
+                                <ul class="concept-list">
+                                    <li><strong>Amortiguadores:</strong> Disipan energía, controlan oscilaciones</li>
+                                    <li><strong>Resortes/Muelles:</strong> Almacenan y liberan energía elástica</li>
+                                    <li><strong>Brazos de suspensión:</strong> Unión articulada chasis-rueda</li>
+                                    <li><strong>Bujes elastoméricos:</strong> Absorben vibraciones alta frecuencia</li>
+                                    <li><strong>Barra estabilizadora:</strong> Reduce balanceo lateral</li>
+                                    <li><strong>Rótulas esféricas:</strong> Movimiento multidireccional</li>
+                                </ul>
+                                
+                                <div class="key-concept">
+                                    ⚙️ Todos trabajan en conjunto para mantener contacto rueda-pavimento
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nodo 8: Componentes de Dirección -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">🟢</div>
+                                <div>
+                                    <div class="concept-title">Componentes Dirección</div>
+                                    <div class="concept-subtitle">Cadena Cinemática</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>Elementos Principales:</strong></p>
+                                <ul class="concept-list">
+                                    <li><strong>Caja de dirección:</strong> Mecanismo reductor de par</li>
+                                    <li><strong>Columna:</strong> Eje transmisor con junta universal</li>
+                                    <li><strong>Terminales:</strong> Rótulas axiales ajustables</li>
+                                    <li><strong>Cremallera/Piñón:</strong> Conversión rotatorio-lineal</li>
+                                    <li><strong>Barra de acoplamiento:</strong> Sincroniza ambas ruedas</li>
+                                </ul>
+                                
+                                <div class="key-concept">
+                                    🎯 Mantienen geometría de Ackermann en curvas para trayectorias óptimas
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nodo 9: Componentes de Frenos -->
+                        <div class="concept-node" onclick="toggleNode(this)">
+                            <div class="concept-header">
+                                <div class="concept-icon">🔶</div>
+                                <div>
+                                    <div class="concept-title">Componentes Frenos</div>
+                                    <div class="concept-subtitle">Sistema Hidráulico</div>
+                                </div>
+                            </div>
+                            <div class="concept-details">
+                                <p><strong>Elementos del Sistema:</strong></p>
+                                <ul class="concept-list">
+                                    <li><strong>Cilindro maestro:</strong> Genera presión hidráulica</li>
+                                    <li><strong>Discos/Tambores:</strong> Superficies de fricción solidarias a ruedas</li>
+                                    <li><strong>Pastillas/Zapatas:</strong> Material de alto coeficiente de fricción</li>
+                                    <li><strong>Cilindros de rueda:</strong> Actuadores hidráulicos</li>
+                                    <li><strong>Sistema ABS:</strong> Modulador antibloqueo electrohidráulico</li>
+                                    <li><strong>Servo de freno:</strong> Multiplica fuerza del pedal</li>
+                                </ul>
+                                
+                                <div class="key-concept">
+                                    💧 Sistema hidráulico transmite fuerza uniformemente a todas las ruedas
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="expand-hint">
+                        👆 Haz clic en cada tarjeta para expandir y ver la información completa
+                    </div>
+                </div>
+
+                <div class="study-card">
+                    <h2>Sistema de Frenos</h2>
+                    <div class="study-content">
+                        <p><strong>Función principal:</strong> El sistema de frenos está diseñado para permitir al conductor detener el vehículo en forma segura y controlada.</p>
+                        
+                        <h3>🔴 Componentes principales:</h3>
+                        <ul>
+                            <li><span class="highlight">Pastillas y discos de freno</span> - Elementos de fricción del sistema de frenos de disco</li>
+                            <li><span class="highlight">Zapatas y tambores</span> - Elementos de fricción del sistema de frenos de tambor</li>
+                            <li><span class="highlight">Cilindros de freno</span> - Transmiten la presión hidráulica</li>
+                            <li><span class="highlight">Servo de freno</span> - Multiplica la fuerza aplicada al pedal</li>
+                            <li><span class="highlight">Sistema ABS</span> - Evita el bloqueo de ruedas</li>
+                            <li><span class="highlight">Bomba de vacío</span> - Genera presión negativa para el servofreno</li>
+                            <li><span class="highlight">Cilindro maestro</span> - Genera presión hidráulica en el sistema</li>
+                        </ul>
+
+                        <h3>⚙️ Tipos de frenos:</h3>
+                        <ul>
+                            <li><strong>Frenos de disco:</strong> Mayor eficacia de frenado, mejor disipación térmica, comúnmente instalados en eje delantero y vehículos de alta gama</li>
+                            <li><strong>Frenos de tambor:</strong> Sistema más económico, menor disipación de calor, generalmente instalados en eje trasero de vehículos de gama media-baja</li>
+                        </ul>
+
+                        <h3>🔑 Principio de funcionamiento:</h3>
+                        <p>Los componentes trabajan en conjunto mediante un <span class="highlight">sistema hidráulico de transmisión de fuerza</span> para <span class="highlight">convertir la energía cinética en energía térmica</span> a través del rozamiento entre elementos de fricción y superficies de frenado, disminuyendo la velocidad o deteniendo completamente el vehículo.</p>
+                    </div>
+                </div>
+
+                <div class="study-card">
+                    <h2>Sistema de Suspensión</h2>
+                    <div class="study-content">
+                        <p><strong>Función principal:</strong> Absorber las vibraciones y los impactos que se producen mientras el vehículo se desplaza por la carretera.</p>
+                        
+                        <h3>🔵 Componentes principales:</h3>
+                        <ul>
+                            <li><span class="highlight">Amortiguadores hidráulicos</span> - Disipan energía controlando la oscilación del sistema elástico</li>
+                            <li><span class="highlight">Resortes helicoidales/Muelles</span> - Elemento elástico que almacena y libera energía absorbiendo irregularidades</li>
+                            <li><span class="highlight">Brazos de suspensión (trapecio)</span> - Elementos de unión articulada entre masa suspendida y no suspendida</li>
+                            <li><span class="highlight">Bujes elastoméricos</span> - Elementos de unión flexible que absorben vibraciones</li>
+                            <li><span class="highlight">Barra estabilizadora (antibalanceo)</span> - Elemento de torsión que reduce el ángulo de balanceo lateral</li>
+                            <li><span class="highlight">Rótulas esféricas</span> - Articulaciones que permiten movimiento multidireccional</li>
+                        </ul>
+
+                        <h3>⚙️ Tipos de suspensión:</h3>
+                        <ul>
+                            <li><strong>McPherson:</strong> Suspensión independiente tipo pseudobrazo oscilante. Forma un triángulo articulado mediante brazo inferior transversal y conjunto muelle-amortiguador coaxial. Prevalente en eje delantero de vehículos ligeros.</li>
+                            <li><strong>Suspensión de eje rígido (Ballestas):</strong> Utiliza paquetes de hojas de acero laminadas como elemento elástico. Aplicación típica en vehículos de carga y tracción 4x4 por su robustez.</li>
+                            <li><strong>Barra de torsión:</strong> Emplea una barra de acero que trabaja a torsión como elemento elástico. Sistema compacto y de bajo costo, montaje longitudinal o transversal.</li>
+                        </ul>
+
+                        <h3>🔑 Objetivo:</h3>
+                        <p>Mantener el contacto neumático-pavimento optimizando la <span class="highlight">adherencia y el confort de marcha</span>, minimizando la transmisión de vibraciones y cargas dinámicas a la carrocería, garantizando estabilidad direccional.</p>
+                    </div>
+                </div>
+
+                <div class="study-card">
+                    <h2>Sistema de Dirección</h2>
+                    <div class="study-content">
+                        <p><strong>Función principal:</strong> Permitir al conductor controlar la dirección del vehículo de manera precisa y segura.</p>
+                        
+                        <h3>🟢 Componentes principales:</h3>
+                        <ul>
+                            <li><span class="highlight">Caja de dirección (mecanismo reductor)</span> - Reduce y transmite el par motor del volante hacia el sistema de mando</li>
+                            <li><span class="highlight">Columna de dirección</span> - Eje transmisor con sistema de absorción de impactos y junta universal</li>
+                            <li><span class="highlight">Brazo pitman</span> - Palanca de salida en sistemas de bolas recirculantes</li>
+                            <li><span class="highlight">Terminales de dirección (rótulas axiales)</span> - Articulaciones ajustables que conectan el sistema de mando con las ruedas directrices</li>
+                            <li><span class="highlight">Cremallera y piñón</span> - Mecanismo de conversión movimiento rotatorio-lineal en sistemas de cremallera</li>
+                            <li><span class="highlight">Barra de acoplamiento (tirante)</span> - Elemento rígido que sincroniza el giro de ambas ruedas directrices</li>
+                        </ul>
+
+                        <h3>⚙️ Tipos de dirección:</h3>
+                        <ul>
+                            <li><strong>Cremallera y piñón:</strong> Sistema de transmisión directa mediante engranaje piñón-cremallera. Relación de transmisión fija, bajo número de componentes. Aplicación estándar en vehículos ligeros.</li>
+                            <li><strong>Bolas recirculantes (sinfín-tuerca):</strong> Mecanismo de tornillo sinfín con recirculación de bolas de acero. Alta eficiencia mecánica y suavidad. Aplicación en vehículos pesados (buses, camiones) por su mayor capacidad de carga.</li>
+                            <li><strong>Tornillo sinfín y rodillo globoidal:</strong> Sistema con superficie de contacto globoidal entre tornillo y rodillo. Bajo desgaste y ajuste de holgura. Menor fricción y juego direccional reducido.</li>
+                        </ul>
+
+                        <h3>🔑 Características:</h3>
+                        <p>Conjunto de elementos mecánicos que <span class="highlight">transforman el movimiento angular del volante en desplazamiento angular de las ruedas directrices</span>, manteniendo la relación de Ackermann para trayectorias curvas, permitiendo el control direccional del vehículo con precisión y estabilidad.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN JUEGO DE MEMORIA -->
+            <div id="memory" class="section">
+                <h2 style="text-align: center; color: #003876; margin-bottom: 30px;">🧠 Juego de Memoria - Sistemas del Vehículo</h2>
+                <p style="text-align: center; font-size: 1.2em; margin-bottom: 20px; color: #005eb8;">Encuentra las parejas de componentes y sus funciones</p>
+                
+                <div class="game-stats">
+                    <span>Movimientos: <span id="moves">0</span></span> | 
+                    <span>Parejas: <span id="pairs">0</span>/8</span> | 
+                    <span>Tiempo: <span id="timer">00:00</span></span>
+                </div>
+
+                <div class="memory-game" id="memoryGame"></div>
+
+                <button class="reset-btn" onclick="resetMemoryGame()">🔄 Nuevo Juego (Nueva Configuración)</button>
+
+                <div class="success-message" id="memorySuccess">
+                    🎉 ¡Excelente! Has completado el juego de memoria. ¡Conoces bien los sistemas del vehículo!
+                </div>
+            </div>
+
+            <!-- SECCIÓN SIMULACIÓN PRÁCTICA -->
+            <div id="simulation" class="section">
+                <h2 style="text-align: center; color: #003876; margin-bottom: 30px;">🔧 Simulación Práctica de Identificación</h2>
+                <p style="text-align: center; font-size: 1.1em; margin-bottom: 30px; color: #005eb8;">Haz clic en los componentes para conocer su información</p>
+
+                <div class="simulation-container">
+                    <div class="vehicle-display">
+                        <h3 style="color: #003876; margin-bottom: 20px;">Vista del Sistema de Traslación</h3>
+                        <svg class="vehicle-svg" viewBox="0 0 800 400" style="max-width: 600px; margin: 20px auto; display: block;">
+                            <!-- Chasis -->
+                            <rect x="100" y="150" width="600" height="100" fill="#b0bec5" stroke="#003876" stroke-width="3"/>
+                            
+                            <!-- Ruedas -->
+                            <circle cx="200" cy="300" r="60" fill="#424242" stroke="#003876" stroke-width="4"/>
+                            <circle cx="200" cy="300" r="35" fill="#78909c"/>
+                            <circle cx="600" cy="300" r="60" fill="#424242" stroke="#003876" stroke-width="4"/>
+                            <circle cx="600" cy="300" r="35" fill="#78909c"/>
+                            
+                            <!-- Sistema de suspensión (McPherson) -->
+                            <!-- Amortiguador izquierdo -->
+                            <rect x="185" y="200" width="30" height="80" fill="#ff5722" stroke="#d84315" stroke-width="2"/>
+                            <circle cx="200" cy="190" r="15" fill="#fdb913" stroke="#f57f17" stroke-width="2"/>
+                            
+                            <!-- Amortiguador derecho -->
+                            <rect x="585" y="200" width="30" height="80" fill="#ff5722" stroke="#d84315" stroke-width="2"/>
+                            <circle cx="600" cy="190" r="15" fill="#fdb913" stroke="#f57f17" stroke-width="2"/>
+                            
+                            <!-- Brazos de suspensión -->
+                            <line x1="200" y1="250" x2="150" y2="200" stroke="#003876" stroke-width="6"/>
+                            <line x1="600" y1="250" x2="650" y2="200" stroke="#003876" stroke-width="6"/>
+                            
+                            <!-- Sistema de frenos -->
+                            <rect x="180" y="280" width="40" height="30" fill="#e91e63" stroke="#880e4f" stroke-width="2"/>
+                            <rect x="580" y="280" width="40" height="30" fill="#e91e63" stroke="#880e4f" stroke-width="2"/>
+                            
+                            <!-- Discos de freno -->
+                            <circle cx="200" cy="300" r="45" fill="none" stroke="#d32f2f" stroke-width="3"/>
+                            <circle cx="600" cy="300" r="45" fill="none" stroke="#d32f2f" stroke-width="3"/>
+                            
+                            <!-- Sistema de dirección -->
+                            <rect x="150" y="140" width="100" height="20" fill="#005eb8" stroke="#003876" stroke-width="2"/>
+                            <circle x="200" cy="150" r="12" fill="#fdb913"/>
+                            
+                            <!-- Volante -->
+                            <circle cx="400" cy="100" r="30" fill="#003876" stroke="#fdb913" stroke-width="3"/>
+                            <circle cx="400" cy="100" r="20" fill="none" stroke="#fdb913" stroke-width="2"/>
+                            <line x1="400" y1="130" x2="400" y2="150" stroke="#003876" stroke-width="4"/>
+                            
+                            <!-- Textos informativos -->
+                            <text x="400" y="30" text-anchor="middle" fill="#003876" font-size="20" font-weight="bold">Sistema de Traslación Vehicular</text>
+                        </svg>
+                    </div>
+
+                    <div class="component-buttons">
+                        <button class="component-btn" onclick="showComponentInfo('suspension')">🔴 Suspensión</button>
+                        <button class="component-btn" onclick="showComponentInfo('frenos')">🟠 Frenos</button>
+                        <button class="component-btn" onclick="showComponentInfo('direccion')">🔵 Dirección</button>
+                        <button class="component-btn" onclick="showComponentInfo('amortiguador')">🟡 Amortiguador</button>
+                        <button class="component-btn" onclick="showComponentInfo('ruedas')">⚫ Ruedas</button>
+                        <button class="component-btn" onclick="showComponentInfo('chasis')">⚪ Chasis</button>
+                    </div>
+
+                    <div class="component-info" id="componentInfo"></div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN EVALUACIÓN -->
+            <div id="quiz" class="section">
+                <h2 style="text-align: center; color: #003876; margin-bottom: 30px;">✅ Evaluación de Conocimientos</h2>
+                <p style="text-align: center; font-size: 1.1em; margin-bottom: 30px; color: #005eb8;">Selecciona la respuesta correcta para cada pregunta</p>
+
+                <div class="quiz-container" id="quizContainer"></div>
+
+                <button class="submit-quiz" onclick="submitQuiz()">📝 Enviar Evaluación</button>
+
+                <div class="quiz-results" id="quizResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // NAVEGACIÓN ENTRE SECCIONES
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // JUEGO DE MEMORIA
+        const memoryCards = [
+            { id: 1, text: "Amortiguador hidráulico" },
+            { id: 1, text: "Disipa energía controlando oscilaciones" },
+            { id: 2, text: "Freno de disco" },
+            { id: 2, text: "Mayor eficacia y disipación térmica" },
+            { id: 3, text: "Cremallera y piñón" },
+            { id: 3, text: "Conversión rotatorio-lineal directa" },
+            { id: 4, text: "Suspensión McPherson" },
+            { id: 4, text: "Pseudobrazo con muelle-amortiguador coaxial" },
+            { id: 5, text: "Cilindro maestro" },
+            { id: 5, text: "Genera presión hidráulica en frenos" },
+            { id: 6, text: "Brazo de suspensión" },
+            { id: 6, text: "Unión articulada masa suspendida-chasis" },
+            { id: 7, text: "Sistema ABS" },
+            { id: 7, text: "Antibloqueo de ruedas en frenado" },
+            { id: 8, text: "Ballesta" },
+            { id: 8, text: "Paquete de hojas laminadas elásticas" }
+        ];
+
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let timerInterval;
+        let seconds = 0;
+
+        function initMemoryGame() {
+            const gameContainer = document.getElementById('memoryGame');
+            gameContainer.innerHTML = '';
+            
+            // Mezclar las cartas usando el algoritmo Fisher-Yates
+            const shuffled = shuffleArray([...memoryCards]);
+            
+            shuffled.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'memory-card';
+                cardElement.dataset.id = card.id;
+                cardElement.dataset.index = index;
+                
+                cardElement.innerHTML = `
+                    <div class="card-front">?</div>
+                    <div class="card-back">${card.text}</div>
+                `;
+                
+                cardElement.addEventListener('click', flipCard);
+                gameContainer.appendChild(cardElement);
+            });
+
+            startTimer();
+        }
+
+        // Algoritmo Fisher-Yates para mezclar arrays aleatoriamente
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function flipCard() {
+            if (flippedCards.length >= 2 || this.classList.contains('flipped') || this.classList.contains('matched')) {
+                return;
+            }
+
+            this.classList.add('flipped');
+            flippedCards.push(this);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('moves').textContent = moves;
+                
+                setTimeout(checkMatch, 800);
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (card1.dataset.id === card2.dataset.id) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                document.getElementById('pairs').textContent = matchedPairs;
+                
+                if (matchedPairs === 8) {
+                    clearInterval(timerInterval);
+                    document.getElementById('memorySuccess').classList.add('show');
+                }
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+            }
+            
+            flippedCards = [];
+        }
+
+        function startTimer() {
+            seconds = 0;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timer').textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function resetMemoryGame() {
+            // Resetear variables
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+            
+            // Actualizar UI
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('pairs').textContent = '0';
+            document.getElementById('memorySuccess').classList.remove('show');
+            
+            // Reiniciar el juego con nueva configuración aleatoria
+            initMemoryGame();
+        }
+
+        // SIMULACIÓN PRÁCTICA
+        const componentData = {
+            suspension: {
+                title: "Sistema de Suspensión",
+                description: "Conjunto de elementos que atenúan la transmisión de irregularidades del terreno al habitáculo",
+                components: [
+                    "Amortiguadores hidráulicos: Disipan energía controlando oscilaciones del sistema elástico",
+                    "Resortes helicoidales: Elemento elástico que almacena/libera energía de deformación",
+                    "Brazos de suspensión: Elementos de unión articulada entre masa suspendida y no suspendida",
+                    "Bujes elastoméricos: Aisladores de vibraciones de alta frecuencia"
+                ],
+                function: "Optimizar el contacto neumático-pavimento garantizando adherencia, confort de marcha y estabilidad direccional"
+            },
+            frenos: {
+                title: "Sistema de Frenos",
+                description: "Sistema hidráulico que permite la deceleración y detención controlada del vehículo",
+                components: [
+                    "Discos/Tambores: Superficies de fricción solidarias a las ruedas",
+                    "Pastillas/Zapatas: Elementos de fricción con material de alto coeficiente",
+                    "Cilindros de rueda: Actuadores hidráulicos que aplican fuerza de frenado",
+                    "Sistema ABS: Modulador electrohidráulico antibloqueo de ruedas"
+                ],
+                function: "Convertir energía cinética en energía térmica mediante rozamiento entre elementos de fricción, disminuyendo velocidad o deteniendo el vehículo de forma controlada"
+            },
+            direccion: {
+                title: "Sistema de Dirección",
+                description: "Mecanismo que permite al conductor controlar la trayectoria del vehículo modificando el ángulo de las ruedas directrices",
+                components: [
+                    "Caja de dirección (mecanismo reductor): Reduce y transmite par motor hacia el sistema de mando",
+                    "Columna de dirección: Eje transmisor con junta universal y sistema de absorción",
+                    "Terminales de dirección: Rótulas axiales ajustables de conexión a ruedas",
+                    "Cremallera/Bolas recirculantes: Mecanismo de conversión rotatorio-lineal"
+                ],
+                function: "Transformar el movimiento angular del volante en desplazamiento angular de las ruedas directrices, manteniendo geometría de Ackermann"
+            },
+            amortiguador: {
+                title: "Amortiguador Hidráulico",
+                description: "Elemento de disipación de energía que controla las oscilaciones del sistema elástico de suspensión",
+                components: [
+                    "Cilindro exterior: Cámara que contiene fluido hidráulico",
+                    "Pistón con válvulas: Genera resistencia hidrodinámica al flujo de aceite",
+                    "Válvulas calibradas: Controlan flujo laminar/turbulento según velocidad",
+                    "Vástago: Elemento transmisor de carga entre suspensión y carrocería"
+                ],
+                function: "Disipar energía de oscilación del sistema masa-resorte mediante resistencia viscosa, evitando resonancia y mejorando confort y adherencia"
+            },
+            ruedas: {
+                title: "Conjunto Rueda-Neumático",
+                description: "Elemento de interfaz vehículo-pavimento que permite transmisión de fuerzas y momentos",
+                components: [
+                    "Llanta (rim): Soporte estructural metálico con geometría específica",
+                    "Neumático: Elemento elástico de caucho que proporciona adherencia y amortiguación",
+                    "Válvula de inflado: Permite control de presión interna",
+                    "Rodamiento: Elemento antifricción que permite rotación con bajo par resistente"
+                ],
+                function: "Transmitir fuerzas longitudinales (tracción/frenado), laterales (viraje) y verticales (carga) entre vehículo y pavimento"
+            },
+            chasis: {
+                title: "Chasis (Bastidor)",
+                description: "Estructura resistente que constituye la base del vehículo y soporta todos los sistemas mecánicos",
+                components: [
+                    "Largueros: Vigas longitudinales principales que absorben cargas de flexión y torsión",
+                    "Travesaños: Vigas transversales que proporcionan rigidez torsional",
+                    "Puntos de anclaje: Soportes reforzados para montaje de motor, suspensión y carrocería",
+                    "Refuerzos estructurales: Elementos que aumentan rigidez local en zonas críticas"
+                ],
+                function: "Proporcionar rigidez estructural, soportar cargas estáticas y dinámicas, y servir como base de montaje para todos los sistemas del vehículo"
+            }
+        };
+
+        function showComponentInfo(component) {
+            const infoDiv = document.getElementById('componentInfo');
+            const data = componentData[component];
+            
+            // Remover clase active de todos los botones
+            document.querySelectorAll('.component-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Agregar clase active al botón clickeado
+            event.target.classList.add('active');
+            
+            infoDiv.innerHTML = `
+                <h3 style="color: #003876; margin-bottom: 15px;">${data.title}</h3>
+                <p style="font-size: 1.1em; margin-bottom: 20px;"><strong>${data.description}</strong></p>
+                
+                <h4 style="color: #fdb913; margin-bottom: 10px;">Componentes principales:</h4>
+                <ul style="margin-bottom: 20px;">
+                    ${data.components.map(comp => `<li>${comp}</li>`).join('')}
+                </ul>
+                
+                <h4 style="color: #fdb913; margin-bottom: 10px;">Función:</h4>
+                <p style="background: #f0f4ff; padding: 15px; border-radius: 8px; border-left: 4px solid #fdb913;">
+                    ${data.function}
+                </p>
+            `;
+            
+            infoDiv.classList.add('show');
+        }
+
+        // EVALUACIÓN
+        const quizQuestions = [
+            {
+                question: "¿Por qué es importante el sistema de dirección del vehículo?",
+                options: [
+                    "Porque controla la velocidad del vehículo",
+                    "Porque permite al conductor controlar la dirección del vehículo de manera precisa y segura",
+                    "Porque mejora el consumo de combustible",
+                    "Porque aumenta la potencia del motor"
+                ],
+                correct: 1,
+                explanation: "El sistema de dirección es fundamental porque permite al conductor controlar la trayectoria del vehículo mediante la modificación del ángulo de las ruedas directrices, garantizando maniobrabilidad y seguridad activa."
+            },
+            {
+                question: "¿Cuál es la función principal del sistema de dirección?",
+                options: [
+                    "Detener el vehículo",
+                    "Absorber impactos de la carretera",
+                    "Convertir el movimiento del volante en movimiento de las ruedas delanteras",
+                    "Aumentar la tracción de las ruedas"
+                ],
+                correct: 2,
+                explanation: "La función principal es transformar el movimiento angular del volante en desplazamiento angular de las ruedas directrices mediante el mecanismo de dirección (cremallera, bolas recirculantes o rodillo globoidal)."
+            },
+            {
+                question: "¿Cuál es una característica del sistema de dirección de cremallera?",
+                options: [
+                    "Es el más pesado y complejo",
+                    "Solo se usa en vehículos de carga",
+                    "Es simple, directo y común en vehículos ligeros modernos",
+                    "Requiere mantenimiento diario"
+                ],
+                correct: 2,
+                explanation: "El sistema de cremallera y piñón es el más utilizado en vehículos ligeros por su simplicidad mecánica, transmisión directa, bajo número de componentes y respuesta inmediata a la acción del conductor."
+            },
+            {
+                question: "¿Por qué es importante el sistema de suspensión?",
+                options: [
+                    "Porque aumenta la velocidad máxima",
+                    "Porque absorbe vibraciones e impactos proporcionando conducción suave",
+                    "Porque reduce el peso del vehículo",
+                    "Porque mejora la aerodinámica"
+                ],
+                correct: 1,
+                explanation: "El sistema de suspensión es crítico porque atenúa la transmisión de irregularidades del terreno al habitáculo, optimizando el contacto neumático-pavimento y garantizando confort, adherencia y estabilidad direccional."
+            },
+            {
+                question: "¿Cuál es la función del sistema de suspensión?",
+                options: [
+                    "Enfriar el motor",
+                    "Mantener las ruedas en contacto con la carretera",
+                    "Generar electricidad",
+                    "Controlar la dirección"
+                ],
+                correct: 1,
+                explanation: "La función primordial es mantener el contacto neumático-pavimento mediante elementos elásticos (resortes) y disipativos (amortiguadores) que absorben y controlan las oscilaciones provocadas por irregularidades del terreno."
+            },
+            {
+                question: "¿Qué caracteriza a la suspensión McPherson?",
+                options: [
+                    "Usa solo ballestas",
+                    "Forma un triángulo articulado con brazo y conjunto muelle-amortiguador",
+                    "Solo se usa en vehículos de competición",
+                    "No requiere amortiguadores"
+                ],
+                correct: 1,
+                explanation: "La suspensión McPherson es un sistema de pseudobrazo oscilante que forma un triángulo articulado mediante un brazo inferior transversal y un conjunto muelle-amortiguador coaxial, prevalente en ejes delanteros por su compacidad."
+            },
+            {
+                question: "¿Por qué es importante el sistema de frenos?",
+                options: [
+                    "Para mejorar la aceleración",
+                    "Para aumentar la comodidad",
+                    "Para detener el vehículo de forma segura y controlada",
+                    "Para mejorar el sonido del motor"
+                ],
+                correct: 2,
+                explanation: "El sistema de frenos es el elemento más crítico de seguridad activa, permitiendo la deceleración y detención controlada del vehículo mediante la conversión de energía cinética en energía térmica por rozamiento."
+            },
+            {
+                question: "¿Cuál es la función principal del sistema de frenos?",
+                options: [
+                    "Generar potencia para el motor",
+                    "Convertir energía cinética en calor para reducir velocidad o detener el vehículo",
+                    "Mejorar la tracción en curvas",
+                    "Aumentar la presión de los neumáticos"
+                ],
+                correct: 1,
+                explanation: "El sistema de frenos funciona mediante un sistema hidráulico que aplica fuerza sobre elementos de fricción (pastillas/zapatas) contra superficies rotatorias (discos/tambores), transformando energía cinética en térmica mediante rozamiento."
+            },
+            {
+                question: "¿Qué característica tienen los frenos de disco respecto a los de tambor?",
+                options: [
+                    "Son más baratos",
+                    "Requieren más espacio",
+                    "Tienen mejor refrigeración y son más eficaces",
+                    "Pesan mucho más"
+                ],
+                correct: 2,
+                explanation: "Los frenos de disco presentan mayor eficacia de frenado y superior disipación térmica al estar expuestos al flujo de aire, reduciendo el riesgo de fading (pérdida de eficacia por sobrecalentamiento), por eso se instalan preferentemente en eje delantero."
+            },
+            {
+                question: "¿Qué componente de la suspensión controla el movimiento y absorbe vibraciones?",
+                options: [
+                    "El volante",
+                    "El amortiguador",
+                    "El disco de freno",
+                    "El radiador"
+                ],
+                correct: 1,
+                explanation: "El amortiguador hidráulico es el elemento disipativo que controla las oscilaciones del sistema masa-resorte mediante resistencia hidrodinámica, evitando resonancia y mejorando confort y adherencia. Sin amortiguadores, el vehículo oscilaría indefinidamente."
+            }
+        ];
+
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            quizQuestions.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.innerHTML = `
+                    <div class="question-text">
+                        ${index + 1}. ${q.question}
+                    </div>
+                    <div class="options">
+                        ${q.options.map((option, optIndex) => `
+                            <label class="option" data-question="${index}" data-option="${optIndex}">
+                                <input type="radio" name="question${index}" value="${optIndex}">
+                                <span>${option}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="feedback${index}"></div>
+                `;
+                container.appendChild(questionCard);
+
+                // Agregar evento a cada opción
+                const options = questionCard.querySelectorAll('.option');
+                options.forEach(option => {
+                    option.addEventListener('click', function() {
+                        const questionIndex = parseInt(this.dataset.question);
+                        const optionIndex = parseInt(this.dataset.option);
+                        showFeedback(questionIndex, optionIndex);
+                    });
+                });
+            });
+        }
+
+        function showFeedback(questionIndex, selectedOption) {
+            const question = quizQuestions[questionIndex];
+            const feedbackDiv = document.getElementById(`feedback${questionIndex}`);
+            const isCorrect = selectedOption === question.correct;
+
+            // Remover clases previas de todas las opciones de esta pregunta
+            const allOptions = document.querySelectorAll(`[data-question="${questionIndex}"]`);
+            allOptions.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            // Agregar clase a la opción seleccionada
+            const selectedOptionElement = document.querySelector(`[data-question="${questionIndex}"][data-option="${selectedOption}"]`);
+            
+            if (isCorrect) {
+                selectedOptionElement.classList.add('correct');
+                feedbackDiv.className = 'feedback correct-feedback show';
+                feedbackDiv.innerHTML = `
+                    <strong>✅ ¡Correcto!</strong>
+                    <p>${question.explanation}</p>
+                `;
+            } else {
+                selectedOptionElement.classList.add('incorrect');
+                
+                // Mostrar también la respuesta correcta
+                const correctOptionElement = document.querySelector(`[data-question="${questionIndex}"][data-option="${question.correct}"]`);
+                correctOptionElement.classList.add('correct');
+                
+                feedbackDiv.className = 'feedback incorrect-feedback show';
+                feedbackDiv.innerHTML = `
+                    <strong>❌ Incorrecto</strong>
+                    <p><strong>La respuesta correcta es:</strong> ${question.options[question.correct]}</p>
+                    <p><strong>Explicación:</strong> ${question.explanation}</p>
+                `;
+            }
+
+            // Scroll suave hacia el feedback
+            feedbackDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function submitQuiz() {
+            let correct = 0;
+            let answered = 0;
+            
+            quizQuestions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="question${index}"]:checked`);
+                
+                if (selected) {
+                    answered++;
+                    const selectedValue = parseInt(selected.value);
+                    
+                    if (selectedValue === q.correct) {
+                        correct++;
+                    }
+                    
+                    // Deshabilitar todas las opciones
+                    const options = document.querySelectorAll(`input[name="question${index}"]`);
+                    options.forEach(option => {
+                        option.disabled = true;
+                    });
+                }
+            });
+
+            if (answered < quizQuestions.length) {
+                alert('⚠️ Por favor responde todas las preguntas antes de enviar la evaluación.');
+                return;
+            }
+
+            const percentage = (correct / quizQuestions.length * 100).toFixed(1);
+            const resultsDiv = document.getElementById('quizResults');
+            
+            let message = '';
+            let color = '';
+            
+            if (percentage >= 90) {
+                message = '🏆 ¡Excelente! Dominas completamente los sistemas de traslación';
+                color = '#28a745';
+            } else if (percentage >= 70) {
+                message = '👍 ¡Muy bien! Tienes un buen conocimiento de los sistemas';
+                color = '#20c997';
+            } else if (percentage >= 50) {
+                message = '📖 Bien, pero necesitas repasar algunos conceptos';
+                color = '#ffc107';
+            } else {
+                message = '📚 Necesitas estudiar más el material. ¡Ánimo, tú puedes!';
+                color = '#dc3545';
+            }
+            
+            resultsDiv.innerHTML = `
+                <h3 style="color: #003876; margin-bottom: 20px;">📊 Resultados de la Evaluación</h3>
+                <div class="score" style="color: ${color};">${percentage}%</div>
+                <p style="font-size: 1.3em; margin-bottom: 20px;">
+                    Has respondido correctamente <strong>${correct}</strong> de <strong>${quizQuestions.length}</strong> preguntas
+                </p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${percentage}%; background: ${color};">
+                        ${percentage}%
+                    </div>
+                </div>
+                <p style="font-size: 1.2em; margin-top: 20px; color: #003876;">
+                    <strong>${message}</strong>
+                </p>
+                <button class="reset-btn" onclick="location.reload()" style="margin-top: 30px;">
+                    🔄 Realizar Nueva Evaluación
+                </button>
+            `;
+            
+            resultsDiv.classList.add('show');
+            
+            // Scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Disable submit button
+            document.querySelector('.submit-quiz').disabled = true;
+            document.querySelector('.submit-quiz').style.opacity = '0.5';
+            document.querySelector('.submit-quiz').style.cursor = 'not-allowed';
+        }
+
+        // INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', function() {
+            initMemoryGame();
+            initQuiz();
+        });
+
+        // MAPA CONCEPTUAL
+        function toggleNode(node) {
+            // Si el nodo ya está activo, cerrarlo
+            if (node.classList.contains('active')) {
+                node.classList.remove('active');
+            } else {
+                // Cerrar otros nodos (opcional - comentar estas líneas si quieres múltiples abiertos)
+                // document.querySelectorAll('.concept-node').forEach(n => {
+                //     n.classList.remove('active');
+                // });
+                
+                // Abrir el nodo clickeado
+                node.classList.add('active');
+                
+                // Scroll suave al nodo
+                setTimeout(() => {
+                    node.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>
